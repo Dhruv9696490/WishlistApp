@@ -14,10 +14,8 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.Scaffold
-import androidx.compose.material.rememberScaffoldState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,13 +28,9 @@ import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.wishlistapp.data.Wish
 import com.example.wishlistapp.data.WishViewModel
-
-
 @Composable
 fun AddEditScreen(id:Long, viewModel: WishViewModel, navController: NavController){
     val context=LocalContext.current
-    val scope = rememberCoroutineScope()
-    val scaffoldState = rememberScaffoldState()
     if(id!=0L){
         val wish = viewModel.getSingleWishById(id).collectAsState(initial = Wish(0L,"",""))
         viewModel.wishTitleState=wish.value.title
@@ -49,8 +43,7 @@ fun AddEditScreen(id:Long, viewModel: WishViewModel, navController: NavControlle
         topBar = { TopAppBarScreen(name = if(id!=0L) "Update Wish" else "Add Wish",
             onNavigationArrowClick = {
                 navController.navigateUp()
-            })},
-        scaffoldState=scaffoldState
+            })}
     ) {
         Column(modifier = Modifier.wrapContentSize().padding(it),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -77,7 +70,7 @@ fun AddEditScreen(id:Long, viewModel: WishViewModel, navController: NavControlle
                             ))
                         Toast.makeText(context,"Your wish is updated", Toast.LENGTH_LONG).show()
                     }
-                    Toast.makeText(context,"Your wish is created", Toast.LENGTH_LONG).show()
+                    //Toast.makeText(context,"Your wish is created", Toast.LENGTH_LONG).show()
                     navController.navigateUp()
                 }else{
                    Toast.makeText(context,"Fill the above text field", Toast.LENGTH_LONG).show()

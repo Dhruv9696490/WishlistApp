@@ -22,7 +22,7 @@ import androidx.navigation.NavController
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun TopAppBarScreen(name: String,onNavigationArrowClick:()->Unit={}){
-        val navigationIcon: @Composable (() -> Unit)? = {
+        val navigationIcon: @Composable (()->Unit) = {
             if(!name.contains("Wishlist App")){
             IconButton(onClick = { onNavigationArrowClick() }) {
                 Icon(
@@ -35,8 +35,8 @@ fun TopAppBarScreen(name: String,onNavigationArrowClick:()->Unit={}){
             null
         }
     }
-        TopAppBar(
-            title={ Text(name,color = colorResource(R.color.white),
+//    : @Composable (() -> Unit)?
+        TopAppBar(title={ Text(name,color = colorResource(R.color.white),
             modifier = Modifier
                 .padding(start = 4.dp)
                 .heightIn(max = 24.dp)) },

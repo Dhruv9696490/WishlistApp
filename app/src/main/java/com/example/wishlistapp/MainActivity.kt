@@ -1,11 +1,16 @@
 package com.example.wishlistapp
 
 import android.os.Bundle
+import android.util.Log.i
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.animation.animateColorAsState
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -16,12 +21,22 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Card
+import androidx.compose.material.DismissDirection
+import androidx.compose.material.DismissValue
+import androidx.compose.material.ExperimentalMaterialApi
+import androidx.compose.material.FractionalThreshold
 import androidx.compose.material.Scaffold
+import androidx.compose.material.SwipeToDismiss
 import androidx.compose.material.Text
+import androidx.compose.material.icons.filled.Delete
+import androidx.compose.material.rememberDismissState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
@@ -41,6 +56,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+@OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun WishlistScreen(navController: NavController,viewModel: WishViewModel){
     val wishList=viewModel.getAllWish.collectAsState(initial = emptyList()).value
@@ -60,11 +76,44 @@ fun WishlistScreen(navController: NavController,viewModel: WishViewModel){
         LazyColumn(modifier = Modifier
             .fillMaxSize()
             .padding(padding)){
-            items(wishList){wish->
-                WishListItem(wish, onCardClick = {
-                    val id=wish.id
-                    navController.navigate(route = Route.AddScreen.route + "/$id")
-                })
+            items(wishList, key = {wish->wish.id}){wish->
+
+                val dismissState = rememberDismissState(
+                    confirmStateChange = {
+                        if(it==DismissValue.DismissedToEnd|| it== DismissValue.DismissedToStart){
+                            viewModel.deleteWish(wish)
+                        }
+                        true
+                    }
+                )
+
+                SwipeToDismiss(
+                    state = dismissState,
+                    directions = setOf(DismissDirection.StartToEnd),
+                    dismissContent = {
+                        WishListItem(wish, onCardClick = {
+                            val id=wish.id
+                            navController.navigate(route = Route.AddScreen.route + "/$id")
+                        })
+                    },
+                    dismissThresholds = {
+                        FractionalThreshold(0.25f)
+                    },
+                    background = {
+                         val color by animateColorAsState(
+                             if(dismissState.dismissDirection== DismissDirection.StartToEnd) Color.Red else Color.Transparent
+                         )
+                        val alignment = Alignment.CenterEnd
+                        Box(
+                            modifier = Modifier.fillMaxSize().background(color).padding(horizontal = 20.dp),
+                            contentAlignment = Alignment.CenterStart
+                        ){
+                            Icon(Icons.Default.Delete,null, tint = Color.White)
+                        }
+                    }
+                )
+
+
             }
         }
     }
@@ -74,7 +123,7 @@ fun WishListItem(wish: Wish, onCardClick:()->Unit){
     Card(modifier = Modifier
         .fillMaxWidth()
         .padding(top = 8.dp, start = 8.dp, end = 8.dp)
-        .clickable{
+        .clickable {
             onCardClick()
         },
         elevation = 15.dp,

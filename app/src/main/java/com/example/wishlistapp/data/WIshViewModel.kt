@@ -8,7 +8,7 @@ import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.launch
-class WishViewModel(private val wishRepository: WishRepositry = Graph.wishRepository): ViewModel(){
+class WishViewModel(private val wishRepository: WishRepository = Graph.wishRepository): ViewModel(){
     var wishTitleState by mutableStateOf("")
     var wishDescriptionState by mutableStateOf("")
     fun onWishTitleChange(newString: String){

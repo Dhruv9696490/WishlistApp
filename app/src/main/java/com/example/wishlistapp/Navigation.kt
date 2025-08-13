@@ -29,8 +29,11 @@ fun Navigation(){
                     nullable=false
                 }
             )){entry->
-            val id= if(entry.arguments!=null) entry.arguments!!.getLong("id") else 0L
-            AddEditScreen(id=id, viewModel = viewModel,navController)
+            val id= if(entry.arguments!=null) entry.arguments?.getLong("id") else 0L
+            id?.let {it->
+                AddEditScreen(id=it, viewModel = viewModel,navController)
+            }
+
         }
     }
 }

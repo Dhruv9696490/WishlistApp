@@ -51,16 +51,16 @@ dependencies {
     implementation( libs.androidx.material)
 
     //Room Data Base
-   implementation("androidx.room:room-runtime:2.6.1")
+   implementation("androidx.room:room-runtime:2.7.0-alpha07")
     implementation(libs.androidx.material3.android)
     implementation(libs.androidx.room.runtime.android)
-    kapt("androidx.room:room-compiler:2.6.1")
+    kapt("androidx.room:room-compiler:2.7.0-alpha07")
 
     // optional - Kotlin Extensions and Coroutines support for Room
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation("androidx.room:room-ktx:2.7.0-alpha07")
     implementation("io.coil-kt:coil-compose:2.6.0")
     // optional - Testing Room databases
-    testImplementation("androidx.room:room-testing:2.6.1")
+    testImplementation("androidx.room:room-testing:2.7.0-alpha07")
 
 
 
